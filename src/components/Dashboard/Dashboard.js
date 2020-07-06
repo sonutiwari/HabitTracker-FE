@@ -28,9 +28,28 @@ class Dashboard extends Component {
   }
   render() {
     console.log(this.state.habits);
-    const elements = this.state.habits.map((habit, index) => (
-      <Habit key={index} name={habit.name} />
-    ));
+    const futureHabits = this.state.habits
+      .filter((habit) => Date.parse(habit.startDate) > new Date())
+      .map((habit, index) => (
+        <Habit
+          key={`future${index}`}
+          name={habit.name}
+          startDate={habit.startDate}
+          frequency={habit.frequency}
+          isDone={false}
+        />
+      ));
+    const currentHabits = this.state.habits
+      .filter((habit) => Date.parse(habit.startDate) <= new Date())
+      .map((habit, index) => (
+        <Habit
+          key={`current${index}`}
+          name={habit.name}
+          startDate={habit.startDate}
+          frequency={habit.frequency}
+          isDone={true}
+        />
+      ));
     return (
       <div className="container">
         <div className="row">
@@ -57,7 +76,14 @@ class Dashboard extends Component {
           ""
         )}
         <div className="row m-auto">
-          <ul>{elements}</ul>
+          <div className="col-xs-12 col-md-6">
+            <h3>Upcoming Habit Tasks:</h3>
+            <ul>{futureHabits}</ul>
+          </div>
+          <div className="col-xs-12 col-md-6">
+            <h3>Ongoing Habit tasks</h3>
+            <ul>{currentHabits}</ul>
+          </div>
         </div>
       </div>
     );
